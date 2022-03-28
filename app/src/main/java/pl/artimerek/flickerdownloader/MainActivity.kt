@@ -1,5 +1,6 @@
 package pl.artimerek.flickerdownloader
 
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -34,8 +35,14 @@ class MainActivity : AppCompatActivity(), OnDownloadComplete, OnDataAvailable {
 
         setSupportActionBar(binding.toolbar)
 
+        val url = createUri("https://api.flickr.com/services/feeds/photos_public.gne",
+            "android,oreo",
+            "en-us",
+            true)
+
+
         val getRawData = GetRawData(this)
-        getRawData.execute("https://api.flickr.com/services/feeds/photos_public.gne?tags=android,oreo&format=json&nojsoncallback=1")
+        getRawData.execute(url)
 
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         appBarConfiguration = AppBarConfiguration(navController.graph)
@@ -45,7 +52,19 @@ class MainActivity : AppCompatActivity(), OnDownloadComplete, OnDataAvailable {
 
     }
 
+    private fun createUri(url: String, search: String, lang: String, matchAll: Boolean) : String {
+        Log.d(TAG, ".createUri starts")
 
+        return Uri.parse(url)
+            .buildUpon()
+            .appendQueryParameter("tags", search)
+            .appendQueryParameter("tagmode", if (matchAll) "ALL" else "ANY")
+            .appendQueryParameter("lang", lang)
+            .appendQueryParameter("format", "json")
+            .appendQueryParameter("nojsoncallback", "1")
+            .build()
+            .toString()
+    }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
