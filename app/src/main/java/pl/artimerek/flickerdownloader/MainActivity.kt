@@ -10,12 +10,17 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
 import pl.artimerek.flickerdownloader.databinding.ActivityMainBinding
-import pl.artimerek.flickerdownloader.download.GetRawData
+import pl.artimerek.flickerdownloader.download.OnDataAvailable
+import pl.artimerek.flickerdownloader.download.OnDownloadComplete
+import pl.artimerek.flickerdownloader.download.impl.GetFlickrData
+import pl.artimerek.flickerdownloader.download.impl.GetRawData
 import pl.artimerek.flickerdownloader.enum.JsonStatus
+import pl.artimerek.flickerdownloader.model.Photo
+import java.lang.Exception
 
 private const val TAG = "MainActivity"
 
-class MainActivity : AppCompatActivity(), GetRawData.OnDownloadComplete {
+class MainActivity : AppCompatActivity(), OnDownloadComplete, OnDataAvailable {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
@@ -68,10 +73,21 @@ class MainActivity : AppCompatActivity(), GetRawData.OnDownloadComplete {
 
     override fun onDownloadComplete(data: String, status: JsonStatus) {
         if (status == JsonStatus.OK) {
-            Log.d(TAG, "onDownloadComplete called, data is $data")
+            Log.d(TAG, "onDownloadComplete called,")
+            val getFlickrData = GetFlickrData(this)
+            getFlickrData.execute(data)
         }else {
             Log.d(TAG, "onDownloadComplete failed status $status, message $status")
         }
+    }
+
+    override fun onDataAvailable(data: List<Photo>) {
+        Log.d(TAG, "onDataAvailable $data")
+
+    }
+
+    override fun onError(exception: Exception) {
+        Log.d(TAG, "onError ${exception.message}")
     }
 
 
