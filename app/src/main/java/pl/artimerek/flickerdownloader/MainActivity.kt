@@ -1,4 +1,4 @@
-package pl.artimerek.flickerdownloader.activity
+package pl.artimerek.flickerdownloader
 
 import android.net.Uri
 import android.os.Bundle
@@ -10,7 +10,9 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
+import androidx.recyclerview.widget.LinearLayoutManager
 import pl.artimerek.flickerdownloader.R
+import pl.artimerek.flickerdownloader.adapter.FlickerRecyclerViewAdapter
 import pl.artimerek.flickerdownloader.databinding.ActivityMainBinding
 import pl.artimerek.flickerdownloader.download.OnDataAvailable
 import pl.artimerek.flickerdownloader.download.OnDownloadComplete
@@ -19,6 +21,7 @@ import pl.artimerek.flickerdownloader.download.impl.GetRawData
 import pl.artimerek.flickerdownloader.enum.JsonStatus
 import pl.artimerek.flickerdownloader.model.Photo
 import java.lang.Exception
+import kotlinx.android.synthetic.main.fragment_first.*
 
 private const val TAG = "MainActivity"
 
@@ -26,15 +29,19 @@ class MainActivity : AppCompatActivity(), OnDownloadComplete, OnDataAvailable {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
+    private val flickrRecyclerViewAdapter = FlickerRecyclerViewAdapter(ArrayList())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d(TAG, "onCreateCalled")
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
+        setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
+
+        recycler_view.layoutManager = LinearLayoutManager(this)
+        recycler_view.adapter = flickrRecyclerViewAdapter
 
         val url = createUri(
             "https://api.flickr.com/services/feeds/photos_public.gne",
@@ -105,6 +112,7 @@ class MainActivity : AppCompatActivity(), OnDownloadComplete, OnDataAvailable {
 
     override fun onDataAvailable(data: List<Photo>) {
         Log.d(TAG, "onDataAvailable $data")
+        flickrRecyclerViewAdapter.loadNewData(data)
 
     }
 

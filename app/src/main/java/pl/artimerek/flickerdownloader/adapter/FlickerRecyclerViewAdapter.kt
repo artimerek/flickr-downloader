@@ -1,10 +1,11 @@
 package pl.artimerek.flickerdownloader.adapter
 
-import android.text.Layout
+
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
 import pl.artimerek.flickerdownloader.R
 import pl.artimerek.flickerdownloader.model.Photo
 
@@ -29,7 +30,15 @@ class FlickerRecyclerViewAdapter(private var photos: List<Photo>) :
     }
 
     override fun onBindViewHolder(holder: FlickerImageViewHolder, position: Int) {
-        TODO("Not yet implemented")
+        val photo = photos[position]
+        Log.d(TAG, "onBindViewHolder ${photo.title}")
+        Picasso.with(holder.thumbnail.context)
+            .load(photo.image)
+            .error(R.drawable.placeholder)
+            .placeholder(R.drawable.placeholder)
+            .into(holder.thumbnail)
+
+        holder.title.text = photo.title
     }
 
     override fun getItemCount(): Int {
