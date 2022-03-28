@@ -11,10 +11,11 @@ import android.view.Menu
 import android.view.MenuItem
 import pl.artimerek.flickerdownloader.databinding.ActivityMainBinding
 import pl.artimerek.flickerdownloader.download.GetRawData
+import pl.artimerek.flickerdownloader.enum.JsonStatus
 
 private const val TAG = "MainActivity"
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), GetRawData.OnDownloadComplete {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
@@ -28,7 +29,7 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
 
-        val getRawData = GetRawData()
+        val getRawData = GetRawData(this)
         getRawData.execute("https://api.flickr.com/services/feeds/photos_public.gne?tags=android,oreo&format=json&nojsoncallback=1")
 
         val navController = findNavController(R.id.nav_host_fragment_content_main)
@@ -64,5 +65,14 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration)
                 || super.onSupportNavigateUp()
     }
+
+    override fun onDownloadComplete(data: String, status: JsonStatus) {
+        if (status == JsonStatus.OK) {
+            Log.d(TAG, "onDownloadComplete called, data is $data")
+        }else {
+            Log.d(TAG, "onDownloadComplete failed status $status, message $status")
+        }
+    }
+
 
 }

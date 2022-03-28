@@ -1,8 +1,8 @@
-package pl.artimerek.flickerdownloader.download
+package pl.artimerek.flickerdownloader.download.impl
 
-import android.nfc.Tag
 import android.os.AsyncTask
 import android.util.Log
+import pl.artimerek.flickerdownloader.download.OnDownloadComplete
 import pl.artimerek.flickerdownloader.enum.JsonStatus
 import java.io.IOException
 import java.net.MalformedURLException
@@ -10,7 +10,7 @@ import java.net.URL
 
 private const val TAG = "GetRawData"
 
-class GetRawData : AsyncTask<String, Void, String>() {
+class GetRawData(private val listener: OnDownloadComplete) : AsyncTask<String, Void, String>() {
 
     private var downloadStatus = JsonStatus.IDLE
 
@@ -47,16 +47,10 @@ class GetRawData : AsyncTask<String, Void, String>() {
         }
     }
 
-    override fun onPostExecute(result: String?) {
+    override fun onPostExecute(result: String) {
         Log.d(TAG, "onPostExecute called $result")
+        listener.onDownloadComplete(result, downloadStatus)
     }
 
-    fun onDownloadComplete(data: String, status: JsonStatus) {
-        if (status == JsonStatus.OK) {
-            Log.d(TAG, "onDownloadComplete called, data is $data")
-        }else {
-            Log.d(TAG, "onDownloadComplete failed status $status, message $status")
-        }
-    }
 }
 
