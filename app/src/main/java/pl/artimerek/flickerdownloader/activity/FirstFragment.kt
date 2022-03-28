@@ -1,4 +1,4 @@
-package pl.artimerek.flickerdownloader
+package pl.artimerek.flickerdownloader.activity
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

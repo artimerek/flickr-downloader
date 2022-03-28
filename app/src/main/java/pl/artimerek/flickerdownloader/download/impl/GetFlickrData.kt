@@ -9,18 +9,19 @@ import pl.artimerek.flickerdownloader.model.Photo
 
 private const val TAG = "GetFlickrData"
 
-class GetFlickrData(private val lister: OnDataAvailable) : AsyncTask<String, Void, ArrayList<Photo>>() {
+class GetFlickrData(private val lister: OnDataAvailable) :
+    AsyncTask<String, Void, ArrayList<Photo>>() {
 
     override fun doInBackground(vararg params: String): ArrayList<Photo> {
         Log.d(TAG, "doInBackground starts")
 
         val photos = ArrayList<Photo>()
 
-        try{
+        try {
             val jsonData = JSONObject(params[0])
             val items = jsonData.getJSONArray("items")
 
-            for (i in 0 until items.length()){
+            for (i in 0 until items.length()) {
                 val jsonPhoto = items.getJSONObject(i)
                 val title = jsonPhoto.getString("title")
                 val author = jsonPhoto.getString("author")
@@ -35,7 +36,7 @@ class GetFlickrData(private val lister: OnDataAvailable) : AsyncTask<String, Voi
                 photos.add(photo)
                 Log.d(TAG, "doInBackground $photo")
             }
-        }catch (e: JSONException) {
+        } catch (e: JSONException) {
             e.printStackTrace()
             Log.e(TAG, "doInBackground ${e.message}")
             cancel(true)

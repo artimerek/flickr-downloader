@@ -1,4 +1,4 @@
-package pl.artimerek.flickerdownloader
+package pl.artimerek.flickerdownloader.activity
 
 import android.net.Uri
 import android.os.Bundle
@@ -10,6 +10,7 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
+import pl.artimerek.flickerdownloader.R
 import pl.artimerek.flickerdownloader.databinding.ActivityMainBinding
 import pl.artimerek.flickerdownloader.download.OnDataAvailable
 import pl.artimerek.flickerdownloader.download.OnDownloadComplete
@@ -35,10 +36,12 @@ class MainActivity : AppCompatActivity(), OnDownloadComplete, OnDataAvailable {
 
         setSupportActionBar(binding.toolbar)
 
-        val url = createUri("https://api.flickr.com/services/feeds/photos_public.gne",
+        val url = createUri(
+            "https://api.flickr.com/services/feeds/photos_public.gne",
             "android,oreo",
             "en-us",
-            true)
+            true
+        )
 
 
         val getRawData = GetRawData(this)
@@ -52,7 +55,7 @@ class MainActivity : AppCompatActivity(), OnDownloadComplete, OnDataAvailable {
 
     }
 
-    private fun createUri(url: String, search: String, lang: String, matchAll: Boolean) : String {
+    private fun createUri(url: String, search: String, lang: String, matchAll: Boolean): String {
         Log.d(TAG, ".createUri starts")
 
         return Uri.parse(url)
@@ -95,7 +98,7 @@ class MainActivity : AppCompatActivity(), OnDownloadComplete, OnDataAvailable {
             Log.d(TAG, "onDownloadComplete called,")
             val getFlickrData = GetFlickrData(this)
             getFlickrData.execute(data)
-        }else {
+        } else {
             Log.d(TAG, "onDownloadComplete failed status $status, message $status")
         }
     }
