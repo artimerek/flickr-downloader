@@ -10,8 +10,9 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
-import pl.artimerek.flickerdownloader.R
 import pl.artimerek.flickerdownloader.adapter.FlickerRecyclerViewAdapter
 import pl.artimerek.flickerdownloader.databinding.ActivityMainBinding
 import pl.artimerek.flickerdownloader.download.OnDataAvailable
@@ -22,10 +23,16 @@ import pl.artimerek.flickerdownloader.enum.JsonStatus
 import pl.artimerek.flickerdownloader.model.Photo
 import java.lang.Exception
 import kotlinx.android.synthetic.main.fragment_first.*
+import pl.artimerek.flickerdownloader.listener.OnRecyclerClickListener
+import pl.artimerek.flickerdownloader.listener.impl.RecyclerItemClickListener
 
 private const val TAG = "MainActivity"
 
-class MainActivity : AppCompatActivity(), OnDownloadComplete, OnDataAvailable {
+class MainActivity : AppCompatActivity(),
+    OnDownloadComplete,
+    OnDataAvailable,
+    OnRecyclerClickListener
+{
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
@@ -41,6 +48,7 @@ class MainActivity : AppCompatActivity(), OnDownloadComplete, OnDataAvailable {
         setSupportActionBar(binding.toolbar)
 
         recycler_view.layoutManager = LinearLayoutManager(this)
+        recycler_view.addOnItemTouchListener(RecyclerItemClickListener(this, recycler_view, this))
         recycler_view.adapter = flickrRecyclerViewAdapter
 
         val url = createUri(
@@ -120,5 +128,14 @@ class MainActivity : AppCompatActivity(), OnDownloadComplete, OnDataAvailable {
         Log.d(TAG, "onError ${exception.message}")
     }
 
+    override fun onItemClick(view: View, position: Int) {
+        Log.d(TAG, "onItemClick")
+        Toast.makeText(this, "Click position $position", Toast.LENGTH_SHORT).show()
+    }
 
+    override fun onItemLongClick(view: View, position: Int) {
+        Log.d(TAG, "onItemLongClick")
+        Toast.makeText(this, "Long click position $position", Toast.LENGTH_SHORT).show()
+
+    }
 }
