@@ -1,5 +1,6 @@
 package pl.artimerek.flickerdownloader
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -23,12 +24,15 @@ import pl.artimerek.flickerdownloader.enum.JsonStatus
 import pl.artimerek.flickerdownloader.model.Photo
 import java.lang.Exception
 import kotlinx.android.synthetic.main.fragment_first.*
+import pl.artimerek.flickerdownloader.activity.BaseActivity
+import pl.artimerek.flickerdownloader.activity.PHOTO_TRANSFER
+import pl.artimerek.flickerdownloader.activity.PhotoDetailsActivity
 import pl.artimerek.flickerdownloader.listener.OnRecyclerClickListener
 import pl.artimerek.flickerdownloader.listener.impl.RecyclerItemClickListener
 
 private const val TAG = "MainActivity"
 
-class MainActivity : AppCompatActivity(),
+class MainActivity : BaseActivity(),
     OnDownloadComplete,
     OnDataAvailable,
     OnRecyclerClickListener
@@ -45,7 +49,7 @@ class MainActivity : AppCompatActivity(),
         binding = ActivityMainBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
-        setSupportActionBar(binding.toolbar)
+        activateToolbar(false)
 
         recycler_view.layoutManager = LinearLayoutManager(this)
         recycler_view.addOnItemTouchListener(RecyclerItemClickListener(this, recycler_view, this))
@@ -135,7 +139,11 @@ class MainActivity : AppCompatActivity(),
 
     override fun onItemLongClick(view: View, position: Int) {
         Log.d(TAG, "onItemLongClick")
-        Toast.makeText(this, "Long click position $position", Toast.LENGTH_SHORT).show()
-
+        val photo = flickrRecyclerViewAdapter.getPhoto(position)
+        if (photo != null) {
+            val intent = Intent(this, PhotoDetailsActivity::class.java)
+            intent.putExtra(PHOTO_TRANSFER, photo)
+            startActivity(intent)
+        }
     }
 }

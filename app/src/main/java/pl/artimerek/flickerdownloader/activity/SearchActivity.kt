@@ -1,23 +1,16 @@
 package pl.artimerek.flickerdownloader.activity
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.ui.AppBarConfiguration
-import pl.artimerek.flickerdownloader.databinding.ActivitySearchBinding
+import pl.artimerek.flickerdownloader.R
 
-class SearchActivity : AppCompatActivity() {
+private const val TAG = "SearchActivity"
 
-    private lateinit var appBarConfiguration: AppBarConfiguration
-    private lateinit var binding: ActivitySearchBinding
+class SearchActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        binding = ActivitySearchBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        setSupportActionBar(binding.toolbar)
-
+        setContentView(R.layout.activity_search)
+        activateToolbar(true)
     }
 
     override fun onSupportNavigateUp(): Boolean {
