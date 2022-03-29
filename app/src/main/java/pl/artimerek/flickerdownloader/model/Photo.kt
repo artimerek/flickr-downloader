@@ -1,9 +1,15 @@
 package pl.artimerek.flickerdownloader.model
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
 class Photo(
-    val title: String, val author: String, val authorId: String,
-    val link: String, val tags: String, val image: String
-) {
+    var title: String, var author: String, var authorId: String,
+    var link: String, var tags: String, var image: String
+) : Parcelable {
+
+
 
     override fun toString(): String {
         return "Photo(title='$title', author='$author', " +
