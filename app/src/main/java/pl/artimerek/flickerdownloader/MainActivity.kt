@@ -4,7 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.PreferenceManager
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -24,9 +24,9 @@ import pl.artimerek.flickerdownloader.enum.JsonStatus
 import pl.artimerek.flickerdownloader.model.Photo
 import java.lang.Exception
 import kotlinx.android.synthetic.main.fragment_first.*
-import pl.artimerek.flickerdownloader.activity.BaseActivity
+import pl.artimerek.flickerdownloader.activity.*
+import pl.artimerek.flickerdownloader.activity.FLICKR_QUERY
 import pl.artimerek.flickerdownloader.activity.PHOTO_TRANSFER
-import pl.artimerek.flickerdownloader.activity.PhotoDetailsActivity
 import pl.artimerek.flickerdownloader.listener.OnRecyclerClickListener
 import pl.artimerek.flickerdownloader.listener.impl.RecyclerItemClickListener
 
@@ -35,8 +35,7 @@ private const val TAG = "MainActivity"
 class MainActivity : BaseActivity(),
     OnDownloadComplete,
     OnDataAvailable,
-    OnRecyclerClickListener
-{
+    OnRecyclerClickListener {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
@@ -57,7 +56,7 @@ class MainActivity : BaseActivity(),
 
         val url = createUri(
             "https://api.flickr.com/services/feeds/photos_public.gne",
-            "android,oreo",
+            "football,soccer",
             "en-us",
             true
         )
@@ -101,7 +100,10 @@ class MainActivity : BaseActivity(),
         // as you specify a parent activity in AndroidManifest.xml.
         Log.d(TAG, "onOptionsItemSelectedCalled")
         return when (item.itemId) {
-            R.id.action_settings -> true
+            R.id.action_search -> {
+                startActivity(Intent(this, SearchActivity::class.java))
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -144,6 +146,27 @@ class MainActivity : BaseActivity(),
             val intent = Intent(this, PhotoDetailsActivity::class.java)
             intent.putExtra(PHOTO_TRANSFER, photo)
             startActivity(intent)
+        }
+    }
+
+    override fun onResume() {
+        Log.d(TAG, "onResume")
+        super.onResume()
+
+        val shared = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        val queryResult = shared.getString(FLICKR_QUERY, "")
+
+        if (queryResult != null) {
+            if (queryResult.isNotEmpty()) {
+                val url = createUri(
+                    "https://api.flickr.com/services/feeds/photos_public.gne",
+                    queryResult,
+                    "en-us",
+                    true
+                )
+                val getRawData = GetRawData(this)
+                getRawData.execute(url)
+            }
         }
     }
 }

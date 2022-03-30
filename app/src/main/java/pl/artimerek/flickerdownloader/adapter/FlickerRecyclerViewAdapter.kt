@@ -30,19 +30,25 @@ class FlickerRecyclerViewAdapter(private var photos: List<Photo>) :
     }
 
     override fun onBindViewHolder(holder: FlickerImageViewHolder, position: Int) {
-        val photo = photos[position]
-        Log.d(TAG, "onBindViewHolder ${photo.title}")
-        Picasso.with(holder.thumbnail.context)
-            .load(photo.image)
-            .error(R.drawable.placeholder)
-            .placeholder(R.drawable.placeholder)
-            .into(holder.thumbnail)
 
-        holder.title.text = photo.title
+        if (photos.isEmpty()) {
+            holder.thumbnail.setImageResource(R.drawable.placeholder)
+            holder.title.setText(R.string.search_no_results)
+        } else {
+            val photo = photos[position]
+            Log.d(TAG, "onBindViewHolder ${photo.title}")
+            Picasso.with(holder.thumbnail.context)
+                .load(photo.image)
+                .error(R.drawable.placeholder)
+                .placeholder(R.drawable.placeholder)
+                .into(holder.thumbnail)
+
+            holder.title.text = photo.title
+        }
     }
 
     override fun getItemCount(): Int {
         Log.d(TAG, "getItemCount")
-        return if (photos.isNotEmpty()) photos.size else 0
+        return if (photos.isNotEmpty()) photos.size else 1
     }
 }

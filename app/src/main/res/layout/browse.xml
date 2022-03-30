@@ -16,6 +16,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:contentDescription="@string/photo_not_found"
         android:scaleType="fitStart"
         app:srcCompat="@drawable/placeholder" />
 
@@ -26,5 +27,5 @@
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_weight="2"
-        android:text="TextView" />
+        android:text="@string/empty_text_view" />
 </LinearLayout>

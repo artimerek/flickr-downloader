@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">flicker downloader</string>
+    <string name="app_name">Flickr downloader</string>
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
@@ -11,4 +11,9 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="title_activity_search">SearchActivity</string>
     <string name="title_activity_photo_details">PhotoDetailsActivity</string>
+    <string name="photo_not_found">Photo not found</string>
+    <string name="empty_text_view">Empty TextView</string>
+    <string name="action_search">Search</string>
+    <string name="searchable_hint">Enter tags</string>
+    <string name="search_no_results">"No photos match search.</string>
 </resources>
